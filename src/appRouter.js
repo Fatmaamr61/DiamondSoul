@@ -19,14 +19,14 @@ export const appRouter = (app, express) => {
   app.use(cors());
 
   // global middleware
-/*   app.use((req, res, next) => {
+  app.use((req, res, next) => {
     // req.originalUrl
-    if (req.originalUrl === "/order/webhook") {
+   /*  if (req.originalUrl === "/order/webhook") {
       return next();
-    }
+    } */
     express.json()(req, res, next);
   });
- */
+
   //routes
   //auth
   app.use("/auth", authRouter);
