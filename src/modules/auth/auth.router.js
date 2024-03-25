@@ -18,7 +18,7 @@ import {
   resetPassword,
   sendForgetCode,
 } from "./auth.controller.js";
-import { isAuthenticated } from "../../middlewares/authintication.middleware.js";
+import { isAuthenticated } from "../../middlewares/authentcation.middleware.js";
 const router = Router();
 
 // register
