@@ -22,7 +22,7 @@ import { isAuthenticated } from "../../middlewares/authentcation.middleware.js";
 const router = Router();
 
 // register
-router.post("/register", isValid(registerSchema), register);
+router.post("/register", register);
 
 // activate account
 router.get(
