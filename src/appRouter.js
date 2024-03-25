@@ -21,7 +21,7 @@ export const appRouter = (app, express) => {
   // global middleware
   app.use((req, res, next) => {
     // req.originalUrl
-   /*  if (req.originalUrl === "/order/webhook") {
+    /*  if (req.originalUrl === "/order/webhook") {
       return next();
     } */
     express.json()(req, res, next);
@@ -44,13 +44,13 @@ export const appRouter = (app, express) => {
   //app.use("/product", productRouter);
 
   // coupon
- // app.use("/coupon", couponRouter);
+  // app.use("/coupon", couponRouter);
 
   // cart
- // app.use("/cart", cartRouter);
+  // app.use("/cart", cartRouter);
 
   // order
- // app.use("/order", orderRouter);
+  // app.use("/order", orderRouter);
 
   // not found page router
   app.all("*", (req, res, next) => {
