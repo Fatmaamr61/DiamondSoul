@@ -14,7 +14,7 @@ export const sendEmail = async ({ to, subject, html, attachments }) => {
   });
   // reciever Info
   const emailInfo = await transporter.sendMail({
-    from: ` "ecommerce" <${process.env.SENDERMAIL}>`, // sender address
+    from: ` "DiamondSoul" <${process.env.SENDERMAIL}>`, // sender address
     to,
     subject,
     html,

@@ -1,5 +1,5 @@
-import { userModel } from "../../db/models/user.model.js";
-import { tokenModel } from "../../db/models/token.model.js";
+import { User } from "../../db/models/user.model.js";
+import { Token } from "../../db/models/token.model.js";
 import jwt from "jsonwebtoken";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
 
@@ -22,7 +22,7 @@ export const isAuthenticated = AsyncHandler(async (req, res, next) => {
   token = token.split(process.env.BEARER)[1];
 
   // check token exsistance
-  const checkToken = await tokenModel.findOne({ token, isValid: true });
+  const checkToken = await Token.findOne({ token, isValid: true });
   if (!checkToken) return next(new Error("Token expired", { cause: 403 }));
 
   // decode
@@ -30,7 +30,7 @@ export const isAuthenticated = AsyncHandler(async (req, res, next) => {
   if (!payload) return next(new Error("Invalid token!"));
 
   // check user existance
-  const user = await userModel.findById(payload.id);
+  const user = await User.findById(payload.id);
   if (!user) return next(new Error("user not found!", { cause: 404 }));
 
   // pass user

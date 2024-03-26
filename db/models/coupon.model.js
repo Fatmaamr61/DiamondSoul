@@ -11,4 +11,4 @@ const couponSchema = new Schema(
 );
 
 // model
-export const couponModel = model("coupon", couponSchema);
+export const Coupon = model("coupon", couponSchema);

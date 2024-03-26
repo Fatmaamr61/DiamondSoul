@@ -62,5 +62,5 @@ const orderSchema = new Schema(
     : this.price;
 }); */
 
-export const orderModel =
+export const Order =
   mongoose.models.orderModel || model("order", orderSchema);

@@ -15,5 +15,5 @@ const categorySchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-export const categoryModel =
+export const Category =
   mongoose.models.categoryModel || model("category", categorySchema);

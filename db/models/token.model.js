@@ -22,4 +22,4 @@ const tokenSchema = new Schema(
   { timestamp: true }
 );
 
-export const tokenModel = model("Token", tokenSchema);
+export const Token = model("token", tokenSchema);

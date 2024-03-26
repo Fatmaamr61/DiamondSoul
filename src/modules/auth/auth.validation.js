@@ -49,7 +49,7 @@ export const changePasswordSchema = joi
   .required();
 
 // send forget code
-export const forgetCodeSchema = joi
+export const sendForgetCodeSchema = joi
   .object({
     email: joi
       .string()
@@ -62,17 +62,16 @@ export const forgetCodeSchema = joi
   })
   .required();
 
+// set forget code
+export const setForgetCodeSchema = joi
+  .object({
+    forgetCode: joi.string().required(),
+  })
+  .required();
+
 // reset password
 export const resetPasswordSchema = joi
   .object({
-    email: joi
-      .string()
-      .email({
-        minDomainSegments: 2,
-        maxDomainSegments: 3,
-        tlds: { allow: ["com", "net", "edu", "org"] },
-      })
-      .required(),
     forgetCode: joi.string().required(),
     password: joi.string().required(),
     cPassword: joi.string().valid(joi.ref("password")).required(),

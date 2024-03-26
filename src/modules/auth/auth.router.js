@@ -3,10 +3,11 @@ import { isValid } from "../../middlewares/validation.middleware.js";
 import {
   activateSchema,
   changePasswordSchema,
-  forgetCodeSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
+  sendForgetCodeSchema,
+  setForgetCodeSchema,
 } from "./auth.validation.js";
 import {
   activateAccount,
@@ -17,6 +18,7 @@ import {
   register,
   resetPassword,
   sendForgetCode,
+  setForgetCode,
 } from "./auth.controller.js";
 import { isAuthenticated } from "../../middlewares/authentcation.middleware.js";
 const router = Router();
@@ -37,21 +39,25 @@ router.post("/login", isValid(loginSchema), login);
 // change password
 router.patch(
   "/changePassword",
-  isValid(changePasswordSchema),
   isAuthenticated,
+  isValid(changePasswordSchema),
   changePassword
 );
 
 // send forget password code
-router.patch("/forgetCode", isValid(forgetCodeSchema), sendForgetCode);
+router.patch("/forgetCode/send", isValid(sendForgetCodeSchema), sendForgetCode);
+
+// set forget code
+router.post("/forgetCode/set", isValid(setForgetCodeSchema), setForgetCode);
 
 // reset password
 router.patch("/resetPassword", isValid(resetPasswordSchema), resetPassword);
+
 
 // logOut
 router.get("/logout", isAuthenticated, logOut);
 
 // delete account
-router.delete("/delete/account", isAuthenticated, deleteAccount);
+router.delete("/account/delete", isAuthenticated, deleteAccount);
 
 export default router;

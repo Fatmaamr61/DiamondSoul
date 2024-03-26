@@ -50,4 +50,4 @@ const userSchema = new Schema(
 );
 
 // model
-export const userModel = model("user", userSchema);
+export const User = model("user", userSchema);

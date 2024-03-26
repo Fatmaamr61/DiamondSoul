@@ -62,5 +62,5 @@ productSchema.methods.inStock = function (requiredQuantity) {
 };
 
 // model
-export const productModel =
+export const Product =
   mongoose.models.productModel || model("product", productSchema);
