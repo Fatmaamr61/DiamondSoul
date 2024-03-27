@@ -1,11 +1,9 @@
 import authRouter from "./modules/auth/auth.router.js";
-/* import categoryRouter from "./modules/category/category.router.js";
-import subcategoryRouter from "./modules/subCategory/subCategory.router.js";
-import brandRouter from "./modules/brand/brand.router.js";
-import productRouter from "./modules/product/product.router.js";
-import couponRouter from "./modules/coupon/coupon.router.js";
-import cartRouter from "./modules/cart/cart.router.js";
-import orderRouter from "./modules/order/order.router.js";  */
+import categoryRouter from "./modules/category/category.router.js";
+//import productRouter from "./modules/product/product.router.js";
+//import couponRouter from "./modules/coupon/coupon.router.js";
+//import cartRouter from "./modules/cart/cart.router.js";
+//import orderRouter from "./modules/order/order.router.js";
 import morgan from "morgan";
 import cors from "cors";
 
@@ -15,24 +13,34 @@ export const appRouter = (app, express) => {
     app.use(morgan("dev"));
   }
 
+  const corsOpts = {
+    origin: "*",
+
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+
+    allowedHeaders: ["Content-Type", "token", "Authorization"],
+  };
+
+  app.use(cors(corsOpts));
   // CORS
-  app.use(cors());
+  express.urlencoded();
+  app.use(express.json());
 
   // global middleware
-  app.use((req, res, next) => {
-    // req.originalUrl
-    /*  if (req.originalUrl === "/order/webhook") {
+  // app.use((req, res, next) => {
+  // req.originalUrl
+  /*  if (req.originalUrl === "/order/webhook") {
       return next();
     } */
-    express.json()(req, res, next);
-  });
+  //   express.json()(req, res, next);
+  // });
 
   //routes
   //auth
   app.use("/auth", authRouter);
 
   // category
-  //app.use("/category", categoryRouter);
+  app.use("/category", categoryRouter);
 
   // subCategory
   //app.use("/subcategory", subcategoryRouter);
