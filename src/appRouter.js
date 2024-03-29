@@ -1,7 +1,7 @@
 import authRouter from "./modules/auth/auth.router.js";
 import categoryRouter from "./modules/category/category.router.js";
 import productRouter from "./modules/products/product.router.js";
-//import couponRouter from "./modules/coupon/coupon.router.js";
+import couponRouter from "./modules/coupon/coupon.router.js";
 //import cartRouter from "./modules/cart/cart.router.js";
 //import orderRouter from "./modules/order/order.router.js";
 import morgan from "morgan";
@@ -45,7 +45,7 @@ export const appRouter = (app, express) => {
   app.use("/product", productRouter);
 
   // coupon
-  // app.use("/coupon", couponRouter);
+  app.use("/coupon", couponRouter);
 
   // cart
   // app.use("/cart", cartRouter);
