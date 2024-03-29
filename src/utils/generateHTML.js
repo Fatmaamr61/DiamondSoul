@@ -108,7 +108,7 @@ export const signUpTemp = (link) => `<!DOCTYPE html>
     <!-- LOGO -->
     <tr>
 <tr>
-   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1221897180613181530/WhatsApp_Image_2024-03-07_at_16.09.13.jpeg?ex=66143f6d&is=6601ca6d&hm=d2d1e3883ea25306730791209f5bf07d7086bf5b6b6a66a500ad6df988f98792&'); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
+   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
@@ -180,18 +180,14 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
         </td>
     </tr>
     <tr>
-   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1221897180613181530/WhatsApp_Image_2024-03-07_at_16.09.13.jpeg?ex=66143f6d&is=6601ca6d&hm=d2d1e3883ea25306730791209f5bf07d7086bf5b6b6a66a500ad6df988f98792&'); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
+   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
-                    <td bgcolor="#ffffff" align="center" valign="top" style="padding: 100px 0px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                        <h1 style="font-size: 45px; font-weight: 400; margin: 2;">Password Reset</h1> <img src="https://cdn.discordapp.com/attachments/880207110607081505/1221889345720418454/diamS_logo.png?ex=66143821&is=6601c321&hm=8e57e5645684b5993af51a9cd6b4efd6c72f45ce8c1662d5598b145405db82a9&" width="350" height="120" style="display: block; border: 0px;" />
+                    <td bgcolor="#ffffff" align="center" valign="top" style="padding: 30px 0px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
+                        <h1 style="font-size: 45px; font-weight: 400; margin: 5;">Password Reset</h1> <img src="https://cdn.discordapp.com/attachments/880207110607081505/1221889345720418454/diamS_logo.png?ex=66143821&is=6601c321&hm=8e57e5645684b5993af51a9cd6b4efd6c72f45ce8c1662d5598b145405db82a9&" width="350" height="120" style="display: block; border: 0px;" />
                     </td>
                 </tr>
             </table>
-        </td>
-    </tr>
-    <tr>
-        <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="left">
@@ -203,6 +199,11 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
                                 </td>
                             </tr>
                         </table>
+        </td>
+    </tr>
+    <tr>
+   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
+            
                     </td>
                 </tr>
                 <tr>

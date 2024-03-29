@@ -1,6 +1,6 @@
 import authRouter from "./modules/auth/auth.router.js";
 import categoryRouter from "./modules/category/category.router.js";
-//import productRouter from "./modules/product/product.router.js";
+import productRouter from "./modules/products/product.router.js";
 //import couponRouter from "./modules/coupon/coupon.router.js";
 //import cartRouter from "./modules/cart/cart.router.js";
 //import orderRouter from "./modules/order/order.router.js";
@@ -23,7 +23,6 @@ export const appRouter = (app, express) => {
 
   app.use(cors(corsOpts));
   // CORS
-  express.urlencoded();
   app.use(express.json());
 
   // global middleware
@@ -42,14 +41,8 @@ export const appRouter = (app, express) => {
   // category
   app.use("/category", categoryRouter);
 
-  // subCategory
-  //app.use("/subcategory", subcategoryRouter);
-
-  // brand
-  //app.use("/brand", brandRouter);
-
   // product
-  //app.use("/product", productRouter);
+  app.use("/product", productRouter);
 
   // coupon
   // app.use("/coupon", couponRouter);

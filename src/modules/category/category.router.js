@@ -15,10 +15,10 @@ import {
   getAllCategories,
   getCategoryById,
 } from "./category.controller.js";
-//import productRouter from "./../product/product.router.js";
+import productRouter from "../products/product.router.js";
 
 const router = Router();
-//router.use("/:categoryId/products", productRouter);
+router.use("/:categoryId/products", productRouter);
 
 // CRUD
 // create category

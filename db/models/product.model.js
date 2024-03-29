@@ -21,8 +21,7 @@ const productSchema = new Schema(
     discount: { type: Number, min: 1, max: 100 },
     finalPrice: { type: Number },
     createdBy: { type: Types.ObjectId, ref: "user", required: true },
-    category: { type: Types.ObjectId, ref: "category" },
-    cloudFolder: { type: String, unique: true },
+    category: { type: Types.ObjectId, ref: "category", required: true },
   },
   { timestamps: true }
 );
