@@ -6,6 +6,13 @@ import slugify from "slugify";
 
 export const addProduct = AsyncHandler(async (req, res, next) => {
   const { name } = req.body;
+  const { category } = req.body;
+
+  // check category
+  const checkCategory = await Category.findById( {_id: category} );  
+  if (!checkCategory)
+    return next(new Error("category not found"), { cause: 404 });
+
   // check file
   if (!req.files)
     return next(new Error("product image is required!", { cause: 400 }));

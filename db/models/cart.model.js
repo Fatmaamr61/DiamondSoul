@@ -11,14 +11,15 @@ const cartSchema = new Schema(
     },
     products: [
       {
-        productId: {
-          type: Schema.Types.ObjectId,
+        product: {
+          type: Types.ObjectId,
           ref: "product",
           required: true,
         },
         quantity: { type: Number, required: true },
       },
     ],
+    intialTotalPrice: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
