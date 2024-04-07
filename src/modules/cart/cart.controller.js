@@ -6,13 +6,13 @@ import { Cart } from "../../../db/models/cart.model.js";
 export const addToCart = AsyncHandler(async (req, res, next) => {
   // data
   const { product, quantity } = req.body;
-  let intialTotalPrice = 0;
 
   // check product
   const checkProduct = await Product.findById(product);
   if (!checkProduct)
     return next(new Error("product not found", { cause: 404 }));
 
+  // check stock
   if (!checkProduct.inStock(quantity))
     return next(
       new Error(
@@ -21,61 +21,102 @@ export const addToCart = AsyncHandler(async (req, res, next) => {
     );
 
   // check product in cart
-  const cartProduct = await Cart.findOne({
+  const checkCart = await Cart.findOne({
+    user: req.user._id,
     "products.product": product,
   });
 
-  if (cartProduct) {
-    const newQuantity = quantity + cartProduct.products[0].quantity;
+  //console.log("checkCart: ", checkCart);
+
+  if (checkCart) {
+    const newQuantity = quantity + checkCart.products[0].quantity;
 
     if (!checkProduct.inStock(newQuantity))
       return next(
         new Error(
-          `sorry!! only ${product.availableItems} items left in the stock..`
+          `sorry!! only ${checkProduct.availableItems} items left in the stock..`
         )
       );
 
-    // product price
-    const productPrice = await Product.findById(product);
-    console.log(productPrice.finalPrice);
-
-    /*  cartProduct.intialTotalPrice = productPrice.finalPrice * quantity;
-    console.log(totalPrice); */
     // update products
-
-    const cart = await Cart.findOneAndUpdate(
+    const updateCart = await Cart.findOneAndUpdate(
       {
         user: req.user._id,
         "products.product": product,
       },
       { $set: { "products.$.quantity": newQuantity } },
-      { $push: intialTotalPrice },
       { new: true }
     );
+
+    // Calculate intial total price
+    const cartPrice = await Cart.findOne({ user: req.user._id }).populate(
+      "products.product",
+      "price discount finalPrice"
+    );
+
+    let intialTotalPrice = 0;
+    cartPrice.products.forEach((item) => {
+      intialTotalPrice += item.product.price * item.quantity;
+    });
+
+    const updateTotalPrice = await Cart.findOneAndUpdate(
+      { user: req.user._id },
+      { intialTotalPrice }
+    );
+
+    //console.log("update total zft: ", updateTotalPrice);
+
+    // get cart
+    const updatedCart = await Cart.findOne({ user: req.user._id }).populate(
+      "products.product",
+      "name defaultImage.url price discount finalPrice"
+    );
+
+    //console.log("updatedCart", updatedCart);
+    //console.log(intialTotalPrice);
+    // Update the intialTotalPrice in the cart
 
     // response
     return res.json({
       success: true,
       message: "product added successfully",
-      results: cart,
+      results: updatedCart,
     });
   } else {
-    // product price
-    const productPrice = await Product.findById(product);
-    console.log(productPrice.finalPrice);
-
     // add to cart
-    const cart = await Cart.findOneAndUpdate(
+    const updateCart = await Cart.findOneAndUpdate(
       { user: req.user._id },
-      { $push: { products: { product, quantity } }, intialTotalPrice },
+      { $push: { products: { product, quantity } } },
       { new: true }
+    );
+
+    // Calculate intial total price
+    const cartPrice = await Cart.findOne({ user: req.user._id }).populate(
+      "products.product",
+      "price discount finalPrice"
+    );
+
+    let intialTotalPrice = 0;
+    cartPrice.products.forEach((item) => {
+      intialTotalPrice += item.product.price * item.quantity;
+    });
+
+    // Update the intialTotalPrice in the cart
+    const updatedTotalPriceCart = await Cart.findByIdAndUpdate(cartPrice._id, {
+      intialTotalPrice,
+    });
+
+    // get cart
+    const cartData = await Cart.findOne({ user: req.user._id }).populate(
+      "products.product",
+      "name defaultImage.url price discount finalPrice"
     );
 
     // response
     return res.json({
       success: true,
       message: "new product added successfully",
-      results: cart,
+      results: cartData,
     });
   }
 });
@@ -118,7 +159,33 @@ export const updateCart = AsyncHandler(async (req, res, next) => {
     { new: true }
   );
 
-  return res.json({ success: true, message: "cart updated !!", results: cart });
+  // Calculate intial total price
+  const cartPrice = await Cart.findOne({ user: req.user._id }).populate(
+    "products.product",
+    "price discount finalPrice"
+  );
+
+  let intialTotalPrice = 0;
+  cartPrice.products.forEach((item) => {
+    intialTotalPrice += item.product.price * item.quantity;
+  });
+
+  const updateTotalPrice = await Cart.findOneAndUpdate(
+    { user: req.user._id },
+    { intialTotalPrice }
+  );
+
+  // get cart
+  const cartData = await Cart.findOne({ user: req.user._id }).populate(
+    "products.product",
+    "name defaultImage.url price discount finalPrice"
+  );
+
+  return res.json({
+    success: true,
+    message: "cart updated !!",
+    results: cartData,
+  });
 });
 
 // remove product from cart
@@ -130,10 +197,33 @@ export const removeProductFromCart = AsyncHandler(async (req, res, next) => {
     },
     { new: true }
   );
+
+  // Calculate intial total price
+  const cartPrice = await Cart.findOne({ user: req.user._id }).populate(
+    "products.product",
+    "price discount finalPrice"
+  );
+
+  let intialTotalPrice = 0;
+  cartPrice.products.forEach((item) => {
+    intialTotalPrice += item.product.price * item.quantity;
+  });
+
+  const updateTotalPrice = await Cart.findOneAndUpdate(
+    { user: req.user._id },
+    { intialTotalPrice }
+  );
+
+  // get cart
+  const cartData = await Cart.findOne({ user: req.user._id }).populate(
+    "products.product",
+    "name defaultImage.url price discount finalPrice"
+  );
+  
   return res.json({
     success: true,
     message: "product deleted successfully!!",
-    results: cart,
+    results: cartData,
   });
 });
 
@@ -144,6 +234,9 @@ export const clearCart = AsyncHandler(async (req, res, next) => {
     { products: [] },
     { new: true }
   );
+
+  cart.intialTotalPrice = 0;
+  cart.save();
 
   return res.json({ success: true, message: "cart cleared!", results: cart });
 });

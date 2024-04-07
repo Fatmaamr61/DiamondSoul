@@ -6,13 +6,13 @@ export const CartSchema = joi
   .object({
     product: joi.string().custom(isValidObjectId).required(),
     quantity: joi.number().integer().min(1).required(),
-    intialTotalPrice: joi.number().required(),
+    intialTotalPrice: joi.number(),
   })
   .required();
 
 // remove product schema
 export const removeProductSchema = joi
   .object({
-    productId: joi.string().custom(isValidObjectId).required(),
+    product: joi.string().custom(isValidObjectId).required(),
   })
   .required();
