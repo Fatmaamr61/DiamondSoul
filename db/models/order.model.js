@@ -6,7 +6,7 @@ const orderSchema = new Schema(
     products: [
       {
         _id: false,
-        productId: { type: Types.ObjectId, ref: "product" },
+        product: { type: Types.ObjectId, ref: "product" },
         quantity: { type: Number, min: 1 },
         name: String,
         itemPrice: Number,
@@ -23,7 +23,7 @@ const orderSchema = new Schema(
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     coupon: {
@@ -50,6 +50,11 @@ const orderSchema = new Schema(
       enum: ["visa", "cash"],
       default: "cash",
     },
+    shipping: {
+      type: Number, 
+      default: 0,
+      required: true
+    }
   },
   { timestamps: true }
 );

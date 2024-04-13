@@ -3,7 +3,7 @@ import categoryRouter from "./modules/category/category.router.js";
 import productRouter from "./modules/products/product.router.js";
 import couponRouter from "./modules/coupon/coupon.router.js";
 import cartRouter from "./modules/cart/cart.router.js";
-//import orderRouter from "./modules/order/order.router.js";
+import orderRouter from "./modules/order/order.router.js";
 import morgan from "morgan";
 import cors from "cors";
 
@@ -51,7 +51,7 @@ export const appRouter = (app, express) => {
   app.use("/cart", cartRouter);
 
   // order
-  // app.use("/order", orderRouter);
+  app.use("/order", orderRouter);
 
   // not found page router
   app.all("*", (req, res, next) => {
