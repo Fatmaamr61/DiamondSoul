@@ -10,7 +10,6 @@ const categorySchema = new Schema(
     },
     products: [{ type: Types.ObjectId, ref: "product" }],
     createdBy: { type: Types.ObjectId, ref: "user", required: true },
-    brandId: [{ type: Types.ObjectId, ref: "brand" }],
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
