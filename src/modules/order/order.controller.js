@@ -22,8 +22,44 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   let shippingCost = 0;
   if (address.includes("cairo") || address.includes("giza")) {
     shippingCost = 60;
-  } else if (address.includes("delta")) {
+  } else if (address.includes("alexandria")) {
+    shippingCost = 65;
+  } else if (
+    address.includes("suez") ||
+    address.includes("ismailia") ||
+    address.includes("port said") ||
+    address.includes("menofia") ||
+    address.includes("qalyubia") ||
+    address.includes("kafr el-sheikh") ||
+    address.includes("damietta") ||
+    address.includes("beheira") ||
+    address.includes("sharqia") ||
+    address.includes("gharbia") ||
+    address.includes("dakahlia")
+  ) {
+    shippingCost = 65;
+  } else if (
+    address.includes("fayoum") ||
+    address.includes("beni suef") ||
+    address.includes("minya") ||
+    address.includes("assiut") ||
+    address.includes("sohag")
+  ) {
     shippingCost = 70;
+  } else if (
+    address.includes("qena") ||
+    address.includes("luxor") ||
+    address.includes("aswan")
+  ) {
+    shippingCost = 70;
+  } else if (address.includes("north coast") || address.includes("matrouh")) {
+    shippingCost = 75;
+  } else if (
+    address.includes("red sea") ||
+    address.includes("new valley") ||
+    address.includes("sharm el-sheikh")
+  ) {
+    shippingCost = 95;
   }
 
   let checkCoupon;
@@ -126,8 +162,6 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
   });
 
-  // TODO delete file from file
-
   // add invoice to order
   order.invoice = { id: public_id, url: secure_url };
   await order.save();
@@ -195,52 +229,4 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     success: true,
     message: "order placed successfully! kindly check your email",
   });
-});
-
-// cancel order
-export const cancelOrder = AsyncHandler(async (req, res, next) => {
-  const order = await Order.findById(req.params.orderId);
-  if (!order) return next(new Error("Order not Found!", { cause: 404 }));
-
-  if (order.status === "shipped" || order.status === "delivered")
-    return next(new Error("Order cannot be cancelled"));
-
-  order.status = "canceled";
-  await order.save();
-
-  // update stock
-  updateStock(order.products, false);
-
-  return res.json({ success: true, message: "order cancelled successfully!" });
-});
-
-export const orderWebhook = AsyncHandler(async (request, response) => {
-  const stripe = new Stripe(process.env.STRIPE_KEY);
-  const sig = request.headers["stripe-signature"];
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(
-      request.body,
-      sig,
-      process.env.ENDPOINT_SECRECT
-    );
-    console.log("events: ", event);
-  } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-    return;
-  }
-
-  // Handle the event
-  const orderId = event.data.object.metadata.order_id;
-
-  if (event.type === "checkout.session.completed") {
-    // change order status
-    await Order.findByIdAndUpdate({ _id: orderId }, { status: "visa paid" });
-    return;
-  }
-  // change order status
-  await Order.findByIdAndUpdate({ _id: orderId }, { status: "failed payment" });
-  return;
 });
