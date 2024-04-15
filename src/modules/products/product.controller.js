@@ -9,7 +9,7 @@ export const addProduct = AsyncHandler(async (req, res, next) => {
   const { category } = req.body;
 
   // check category
-  const checkCategory = await Category.findById( {_id: category} );  
+  const checkCategory = await Category.findById({ _id: category });
   if (!checkCategory)
     return next(new Error("category not found"), { cause: 404 });
 
@@ -45,6 +45,12 @@ export const addProduct = AsyncHandler(async (req, res, next) => {
     category: req.body.category,
   });
 
+  const addToCategory = await Category.findByIdAndUpdate(
+     category ,
+    { $push: { products: product.id } },
+    { new: true }
+  );
+console.log(addToCategory);
   const finalPrice = req.body.discount
     ? Number.parseFloat(
         product.price - (product.price * req.body.discount) / 100
