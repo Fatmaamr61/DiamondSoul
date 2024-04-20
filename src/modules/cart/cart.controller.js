@@ -54,6 +54,8 @@ export const addToCart = AsyncHandler(async (req, res, next) => {
       "price discount finalPrice"
     );
 
+    console.log("pricee: ", cartPrice.produ);
+
     let intialTotalPrice = 0;
     cartPrice.products.forEach((item) => {
       intialTotalPrice += item.product.price * item.quantity;

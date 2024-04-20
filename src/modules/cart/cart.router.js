@@ -23,7 +23,7 @@ router.get("/", isAuthenticated, userCart);
 router.patch("/", isAuthenticated, isValid(CartSchema), updateCart);
 
 // clear cart
-router.put("/clear", isAuthenticated, clearCart);
+router.delete("/clear", isAuthenticated, clearCart);
 
 // remove product from cart
 router.patch(
