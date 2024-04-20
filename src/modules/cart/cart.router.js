@@ -26,7 +26,7 @@ router.patch("/", isAuthenticated, isValid(CartSchema), updateCart);
 router.delete("/clear", isAuthenticated, clearCart);
 
 // remove product from cart
-router.patch(
+router.delete(
   "/:product",
   isAuthenticated,
   isValid(removeProductSchema),
