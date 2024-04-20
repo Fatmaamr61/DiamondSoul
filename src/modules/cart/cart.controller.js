@@ -130,7 +130,7 @@ export const userCart = AsyncHandler(async (req, res, next) => {
     "name defaultImage.url price discount finalPrice"
   );
 
-  return res.json({ success: true, result: cart });
+  return res.json({ success: true, results: cart });
 });
 
 // update cart
