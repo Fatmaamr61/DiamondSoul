@@ -16,48 +16,48 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // create order
 export const createOrder = AsyncHandler(async (req, res, next) => {
   // data
-  const { payment, address, phone, coupon } = req.body;
+  const { payment, city, fullAdress, phone, coupon } = req.body;
 
-  // Calculate shipping cost based on address
+  // Calculate shipping cost based on city
   let shippingCost = 0;
-  if (address.includes("cairo") || address.includes("giza")) {
+  if (city.includes("cairo") || city.includes("giza")) {
     shippingCost = 60;
-  } else if (address.includes("alexandria")) {
+  } else if (city.includes("alexandria")) {
     shippingCost = 65;
   } else if (
-    address.includes("suez") ||
-    address.includes("ismailia") ||
-    address.includes("port said") ||
-    address.includes("menofia") ||
-    address.includes("qalyubia") ||
-    address.includes("kafr el-sheikh") ||
-    address.includes("damietta") ||
-    address.includes("beheira") ||
-    address.includes("sharqia") ||
-    address.includes("gharbia") ||
-    address.includes("dakahlia")
+    city.includes("suez") ||
+    city.includes("ismailia") ||
+    city.includes("port said") ||
+    city.includes("menofia") ||
+    city.includes("qalyubia") ||
+    city.includes("kafr el-sheikh") ||
+    city.includes("damietta") ||
+    city.includes("beheira") ||
+    city.includes("sharqia") ||
+    city.includes("gharbia") ||
+    city.includes("dakahlia")
   ) {
     shippingCost = 65;
   } else if (
-    address.includes("fayoum") ||
-    address.includes("beni suef") ||
-    address.includes("minya") ||
-    address.includes("assiut") ||
-    address.includes("sohag")
+    city.includes("fayoum") ||
+    city.includes("beni suef") ||
+    city.includes("minya") ||
+    city.includes("assiut") ||
+    city.includes("sohag")
   ) {
     shippingCost = 70;
   } else if (
-    address.includes("qena") ||
-    address.includes("luxor") ||
-    address.includes("aswan")
+    city.includes("qena") ||
+    city.includes("luxor") ||
+    city.includes("aswan")
   ) {
     shippingCost = 70;
-  } else if (address.includes("north coast") || address.includes("matrouh")) {
+  } else if (city.includes("north coast") || city.includes("matrouh")) {
     shippingCost = 75;
   } else if (
-    address.includes("red sea") ||
-    address.includes("new valley") ||
-    address.includes("sharm el-sheikh")
+    city.includes("red sea") ||
+    city.includes("new valley") ||
+    city.includes("sharm el-sheikh")
   ) {
     shippingCost = 95;
   }
@@ -123,7 +123,8 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   const order = await Order.create({
     user: req.user._id,
     products: orderProducts,
-    address,
+    city,
+    fullAdress,
     phone,
     coupon: {
       id: checkCoupon?._id,
@@ -141,7 +142,8 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   const invoice = {
     shipping: {
       name: user.userName,
-      address: order.address,
+      city: order.city,
+      fullAdress: order.fullAdress,
       country: "Egypt",
     },
     items: order.products,

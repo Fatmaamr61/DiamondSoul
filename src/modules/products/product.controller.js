@@ -46,11 +46,11 @@ export const addProduct = AsyncHandler(async (req, res, next) => {
   });
 
   const addToCategory = await Category.findByIdAndUpdate(
-     category ,
+    category,
     { $push: { products: product.id } },
     { new: true }
   );
-console.log(addToCategory);
+  console.log(addToCategory);
   const finalPrice = req.body.discount
     ? Number.parseFloat(
         product.price - (product.price * req.body.discount) / 100
@@ -125,6 +125,17 @@ export const editProduct = AsyncHandler(async (req, res, next) => {
   console.log(editedProduct);
   return res.status(200).json(editedProduct);
 });
+
+/* export const addToFavorite = AsyncHandler(async (req, res, next) => {
+  const { productId } = req.body;
+
+  // check if product exist
+  const product = await Product.findById(productId);
+  if (!product) return next(new Error("product not found!", { cause: 404 }));
+
+  // check if product exist in user's favorites
+  const check = await 
+}); */
 
 export const deleteProduct = AsyncHandler(async (req, res, next) => {
   // check product

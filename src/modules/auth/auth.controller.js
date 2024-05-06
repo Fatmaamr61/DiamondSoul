@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import { Token } from "../../../db/models/token.model.js";
 import randomstring from "randomstring";
 import { Cart } from "../../../db/models/cart.model.js";
+import { Favorites } from "../../../db/models/favorite.model.js";
 
 export const register = AsyncHandler(async (req, res, next) => {
   // data from request
@@ -33,7 +34,7 @@ export const register = AsyncHandler(async (req, res, next) => {
   });
 
   // create confirmation link
-  const link = `https://diamond-soul.vercel.app/auth/confirmEmail/${activationCode}`;
+  const link = `https://diamondsoulstore.com/auth/confirmEmail/${activationCode}`;
 
   // send email
   const isSent = await sendEmail({
@@ -64,6 +65,9 @@ export const activateAccount = AsyncHandler(async (req, res, next) => {
   // create a cart
   await Cart.create({ user: user._id });
 
+  // create user's favorites
+  await Favorites.create({ user: user._id });
+
   // send response
   return res.send(
     "congratulations your account is now activated!, you can login now"
@@ -88,7 +92,6 @@ export const login = AsyncHandler(async (req, res, next) => {
 
   // check if user have active token and invalidate it
   const tokens = await Token.find({ user: user._id });
-
   tokens.forEach(async (token) => {
     token.isValid = false;
     await token.save();
@@ -97,7 +100,7 @@ export const login = AsyncHandler(async (req, res, next) => {
   // generate token
   const token = jwt.sign(
     { id: user._id, email: user.email },
-    process.env.TOKEN_KEY,
+    process.env.TOKEN_KEY
   );
 
   // save token in token model
@@ -111,8 +114,11 @@ export const login = AsyncHandler(async (req, res, next) => {
   user.status = "online";
   await user.save();
 
+  // get user role
+  const userRole = await User.findById(user._id);
+
   // send response
-  return res.json({ success: true, results: token });
+  return res.json({ success: true, results: token, role: userRole.role });
 });
 
 export const changePassword = AsyncHandler(async (req, res, next) => {

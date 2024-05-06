@@ -14,7 +14,40 @@ const orderSchema = new Schema(
       },
     ],
     invoice: { id: String, url: String },
-    address: {
+    city: {
+      type: String,
+      enum: [
+        "cairo",
+        "giza",
+        "alexandria",
+        "suez",
+        "ismailia",
+        "port said",
+        "menofia",
+        "qalyubia",
+        "kafr el-sheikh",
+        "damietta",
+        "beheira",
+        "sharqia",
+        "gharbia",
+        "dakahlia",
+        "fayoum",
+        "beni suef",
+        "minya",
+        "assiut",
+        "sohag",
+        "qena",
+        "luxor",
+        "aswan",
+        "north coast",
+        "matrouh",
+        "red sea",
+        "new valley",
+        "sharm el-sheikh",
+      ],
+      required: true,
+    },
+    fullAdress: {
       type: String,
       required: true,
     },
@@ -51,10 +84,10 @@ const orderSchema = new Schema(
       default: "cash",
     },
     shipping: {
-      type: Number, 
+      type: Number,
       default: 0,
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -67,5 +100,4 @@ const orderSchema = new Schema(
     : this.price;
 }); */
 
-export const Order =
-  mongoose.models.orderModel || model("order", orderSchema);
+export const Order = mongoose.models.orderModel || model("order", orderSchema);
