@@ -161,7 +161,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   createInvoice(invoice, pdfPath);
 
   // upload cloudinary
-  const { secure_url, public_id } = await cloudinary.uploader.upload(pdfPath, {
+  const { secure_url, public_id } = await cloudinary.uploader.upload_stream(pdfPath, {
     folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
   });
 
