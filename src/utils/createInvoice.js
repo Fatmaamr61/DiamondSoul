@@ -52,7 +52,7 @@ function generateCustomerInformation(doc, invoice) {
     .text(invoice.shipping.country, 300, customerInformationTop + 45)
     .moveDown();
 
-  generateHr(doc, 252);
+  generateHr(doc, 260);
 }
 
 function generateInvoiceTable(doc, invoice) {
