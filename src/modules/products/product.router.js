@@ -11,6 +11,7 @@ import {
 import {
   addDiscount,
   addProduct,
+  addToFavorite,
   deleteProduct,
   editProduct,
   getAllProducts,
@@ -47,6 +48,9 @@ router.patch(
   isValid(discountSchema),
   addDiscount
 );
+
+// add to favorite
+router.patch("/favorites/add", isValid(ProductIdSchema), addToFavorite);
 
 // remove discount
 router.patch(

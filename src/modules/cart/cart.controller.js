@@ -192,6 +192,11 @@ export const updateCart = AsyncHandler(async (req, res, next) => {
 
 // remove product from cart
 export const removeProductFromCart = AsyncHandler(async (req, res, next) => {
+  // check product
+  const product = await Cart.findOne({ product: req.params.product });
+  if (product.length < 1)
+    return next(new Error("this product not found in the cart!"));
+
   const cart = await Cart.findOneAndUpdate(
     { user: req.user._id },
     {
@@ -221,7 +226,7 @@ export const removeProductFromCart = AsyncHandler(async (req, res, next) => {
     "products.product",
     "name defaultImage.url price discount finalPrice"
   );
-  
+
   return res.json({
     success: true,
     message: "product deleted successfully!!",

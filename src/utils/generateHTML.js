@@ -108,11 +108,11 @@ export const signUpTemp = (link) => `<!DOCTYPE html>
     <!-- LOGO -->
     <tr>
 <tr>
-   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
+   <td style="background-image: url('/Users/fatmaamr/Desktop/Work/diamondSoul/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg'); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                        <h1 style="font-size: 45px; font-weight: 400; margin: 2;">Activation Mail</h1> <img src="https://cdn.discordapp.com/attachments/880207110607081505/1221893416405700618/image.png?ex=66143bec&is=6601c6ec&hm=a00b8cf8759e315f95f926c3264d8623d61b13bad951fd74ec1256011a77ef54&" width="400" height="420" style="display: block; border: 0px;" />
+                        <h1 style="font-size: 45px; font-weight: 400; margin: 2;">Activation Mail</h1> <img src="/Users/fatmaamr/Desktop/Work/diamondSoul/diamS_logo.png" width="400" height="420" style="display: block; border: 0px;" />
                     </td>
                 </tr>
             </table>
@@ -180,7 +180,7 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
         </td>
     </tr>
     <tr>
-   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
+   <td style="background-image: url('/Users/fatmaamr/Desktop/Work/diamondSoul/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 30px 0px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
@@ -202,7 +202,7 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
         </td>
     </tr>
     <tr>
-   <td style="background-image: url('https://cdn.discordapp.com/attachments/880207110607081505/1222647420421410877/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg?ex=6616fa24&is=66048524&hm=592d501b900a5decd91f2bf2a82becb4b54914c97c9900d4d8b604f7725b22db&'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
+   <td style="background-image: url('/Users/fatmaamr/Desktop/Work/diamondSoul/WhatsApp_Image_2024-03-27_at_22.34.27.jpeg'); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
             
                     </td>
                 </tr>

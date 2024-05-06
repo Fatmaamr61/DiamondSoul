@@ -3,6 +3,7 @@ import { Category } from "../../../db/models/category.model.js";
 import { AsyncHandler } from "../../utils/AsyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
 import slugify from "slugify";
+import { Favorites } from "../../../db/models/favorite.model.js";
 
 export const addProduct = AsyncHandler(async (req, res, next) => {
   const { name } = req.body;
@@ -126,7 +127,7 @@ export const editProduct = AsyncHandler(async (req, res, next) => {
   return res.status(200).json(editedProduct);
 });
 
-/* export const addToFavorite = AsyncHandler(async (req, res, next) => {
+export const addToFavorite = AsyncHandler(async (req, res, next) => {
   const { productId } = req.body;
 
   // check if product exist
@@ -134,8 +135,24 @@ export const editProduct = AsyncHandler(async (req, res, next) => {
   if (!product) return next(new Error("product not found!", { cause: 404 }));
 
   // check if product exist in user's favorites
-  const check = await 
-}); */
+  const check = await Favorites.findOne({
+    user: req.user._id,
+    "products.id": productId,
+  });
+
+  // add to favorites
+  const addToFavorite = await Favorites.findOneAndUpdate(
+    { user: req.user._id },
+    { $push: { products: { id: productId } } },
+    { new: true }
+  ).populate("products");
+
+  return res.json({
+    success: true,
+    message: "product added to favorites successfully..",
+    results: addToFavorite,
+  });
+});
 
 export const deleteProduct = AsyncHandler(async (req, res, next) => {
   // check product
