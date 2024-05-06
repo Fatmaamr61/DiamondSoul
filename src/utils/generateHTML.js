@@ -108,11 +108,11 @@ export const signUpTemp = (link) => `<!DOCTYPE html>
     <!-- LOGO -->
     <tr>
 <tr>
-   <td style="background-image: url(../../background.jpeg); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
+   <td style="background-image: url(https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029369/DiamondSoul/background.jpg); background-size: cover; background-repeat: no-repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                        <h1 style="font-size: 45px; font-weight: 400; margin: 2;">Activation Mail</h1> <img src="../../DiamS_logo.png" width="400" height="420" style="display: block; border: 0px;" />
+                        <h1 style="font-size: 45px; font-weight: 400; margin: 2;">Activation Mail</h1> <img src="https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029372/DiamondSoul/logo.png" width="400" height="420" style="display: block; border: 0px;" />
                     </td>
                 </tr>
             </table>
@@ -180,11 +180,11 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
         </td>
     </tr>
     <tr>
-   <td style="background-image: url(../../background.jpeg); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
+   <td style="background-image: url(https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029369/DiamondSoul/background.jpg); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                 <tr>
                     <td bgcolor="#ffffff" align="center" valign="top" style="padding: 30px 0px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                        <h1 style="font-size: 45px; font-weight: 400; margin: 5;">Password Reset</h1> <img src= "../../diamS_logo.png" width="350" height="120" style="display: block; border: 0px;" />
+                        <h1 style="font-size: 45px; font-weight: 400; margin: 5;">Password Reset</h1> <img src= "https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029372/DiamondSoul/logo.png" width="350" height="120" style="display: block; border: 0px;" />
                     </td>
                 </tr>
             </table>
@@ -202,7 +202,7 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
         </td>
     </tr>
     <tr>
-   <td style="background-image: url(../../background.jpeg); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
+   <td style="background-image: url(https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029369/DiamondSoul/background.jpg); background-size: cover; background-repeat: repeat; background-position: center center;" align="center">
             
                     </td>
                 </tr>
