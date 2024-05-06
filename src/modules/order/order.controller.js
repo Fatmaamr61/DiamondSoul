@@ -16,7 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // create order
 export const createOrder = AsyncHandler(async (req, res, next) => {
   // data
-  const { payment, city, fullAdress, phone, coupon } = req.body;
+  const { payment, city, fullAddress, phone, coupon } = req.body;
 
   // Calculate shipping cost based on city
   let shippingCost = 0;
@@ -124,7 +124,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     user: req.user._id,
     products: orderProducts,
     city,
-    fullAdress,
+    fullAddress,
     phone,
     coupon: {
       id: checkCoupon?._id,
@@ -143,7 +143,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     shipping: {
       name: user.userName,
       city: order.city,
-      fullAdress: order.fullAdress,
+      fullAddress: order.fullAddress,
       country: "Egypt",
     },
     items: order.products,
