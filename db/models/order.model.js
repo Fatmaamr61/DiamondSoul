@@ -47,7 +47,7 @@ const orderSchema = new Schema(
       ],
       required: true,
     },
-    fullAdress: {
+    fullAddress: {
       type: String,
       required: true,
     },
