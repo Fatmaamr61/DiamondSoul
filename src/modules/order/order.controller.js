@@ -274,6 +274,7 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
       folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
     }
   );
+  
   /* const isSent = await sendEmail({
     to: user.email,
     subject: "Order Invoice",
