@@ -13,10 +13,12 @@ import Stripe from "stripe";
 import { Invoice } from "../../../db/models/invoice.model.js";
 import { User } from "../../../db/models/user.model.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+//const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // create order
 export const createOrder = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
   // data
   const { payment, city, fullAddress, phone, coupon } = req.body;
 
@@ -141,7 +143,6 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   });
 
   // generate invoice
-  const user = req.user;
   const invoice = {
     shipping: {
       name: user.userName,
@@ -151,123 +152,10 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     },
     items: order.products,
     subtotal: order.price,
-    shippingCost, // Include shipping cost in invoice
+    shippingCost: order.shipping, // Include shipping cost in invoice
     paid: order.finalPrice,
     invoice_nr: order._id,
   };
-
-  const pdfPath = path.join(
-    __dirname,
-    `./../../../invoiceTemp/${order._id}.pdf`
-  );
-  createInvoice(invoice, pdfPath);
-
-  // upload cloudinary
-  const { secure_url, public_id } = await cloudinary.uploader.upload_stream(
-    pdfPath,
-    {
-      folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
-    }
-  );
-
-  // add invoice to order
-  order.invoice = { id: public_id, url: secure_url };
-  await order.save();
-
-  // send Email
-  const isSent = await sendEmail({
-    to: user.email,
-    subject: "Order Invoice",
-    attachments: [
-      {
-        path: secure_url,
-        contentType: "application/pdf",
-      },
-    ],
-  });
-
-  if (isSent) {
-    // update stock
-    updateStock(order.products, true);
-    // clear cart
-    clearCart(req.user._id);
-  }
-
-  // stripe payment
-  if (payment == "visa") {
-    const stripe = new Stripe(process.env.STRIPE_KEY);
-
-    let existCoupon;
-    if (order.coupon.name !== undefined) {
-      existCoupon = await stripe.coupons.create({
-        percent_off: order.coupon.discount,
-        duration: "once",
-      });
-    }
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      metadata: { order_id: order._id.toString() },
-      success_url: process.env.SUCCESS_URL,
-      cancel_url: process.env.CANCEL_URL,
-      line_items: order.products.map((product) => {
-        return {
-          price_data: {
-            currency: "EGP",
-            product_data: {
-              name: product.name,
-            },
-            unit_amount: product.itemPrice * 100,
-          },
-          quantity: product.quantity,
-        };
-      }),
-      discounts: existCoupon ? [{ coupon: existCoupon.id }] : [],
-    });
-
-    return res.json({
-      success: true,
-      results: session.url,
-    });
-  }
-
-  // respose
-  return res.json({
-    success: true,
-    message: "order placed successfully! kindly check your email",
-  });
-});
-
-export const sendInvoice = AsyncHandler(async (req, res, next) => {
-  // get user Order
-  const userOrder = await Order.findOne({ user: req.user._id });
-  if (userOrder.length < 1) return next(new Error("no order for this user"));
-
-  // get user data
-  const user = await User.findById(req.user._id);
-
-  // generate invoice
-  const invoice = {
-    shipping: {
-      name: user.userName,
-      city: userOrder.city,
-      fullAddress: userOrder.fullAddress,
-      country: "Egypt",
-    },
-    items: userOrder.products,
-    subtotal: userOrder.price,
-    shippingCost: userOrder.shipping, // Include shipping cost in invoice
-    paid: userOrder.finalPrice,
-    invoice_nr: userOrder._id,
-  };
-
-  /*  const pdfPath = path.join(
-    __dirname,
-    `../../../invoiceTemp/${userOrder._id}.pdf`
-  );
-  
-  console.log(pdfPath); */
 
   const invoiceStream = createInvoice(invoice);
 
@@ -300,6 +188,13 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
           invoice: { id: result.public_id, url: result.secure_url },
         });
 
+        if (isSent) {
+          // update stock
+          updateStock(order.products, true);
+          // clear cart
+          clearCart(req.user._id);
+        }
+
         return res.json({
           success: true,
           message: "Invoice sent successfully!",
@@ -310,6 +205,5 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
       }
     }
   );
-
   invoiceStream.pipe(uploadStream);
 });
