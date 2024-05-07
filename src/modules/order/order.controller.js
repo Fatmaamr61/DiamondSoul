@@ -246,9 +246,6 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
 
   // get user data
   const user = await User.findById(req.user._id);
-  console.log(user);
-
-  console.log(user);
   // generate invoice
   const invoice = {
     shipping: {
