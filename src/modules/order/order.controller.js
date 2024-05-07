@@ -10,6 +10,8 @@ import cloudinary from "./../../utils/cloud.js";
 import { clearCart, updateStock } from "./order.service.js";
 import { sendEmail } from "./../../utils/sendEmail.js";
 import Stripe from "stripe";
+import { Invoice } from "../../../db/models/invoice.model.js";
+import { User } from "../../../db/models/user.model.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -161,9 +163,12 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   createInvoice(invoice, pdfPath);
 
   // upload cloudinary
-  const { secure_url, public_id } = await cloudinary.uploader.upload_stream(pdfPath, {
-    folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
-  });
+  const { secure_url, public_id } = await cloudinary.uploader.upload_stream(
+    pdfPath,
+    {
+      folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
+    }
+  );
 
   // add invoice to order
   order.invoice = { id: public_id, url: secure_url };
@@ -232,4 +237,69 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     success: true,
     message: "order placed successfully! kindly check your email",
   });
+});
+
+export const sendInvoice = AsyncHandler(async (req, res, next) => {
+  // get user Order
+  const userOrder = await Order.findOne({ user: req.user._id });
+  if (userOrder.length < 1) return next(new Error("no order for this user"));
+
+  // get user data
+  const user = await User.findById(req.user._id);
+  console.log(user);
+
+  console.log(user);
+  // generate invoice
+  const invoice = {
+    shipping: {
+      name: user.userName,
+      city: userOrder.city,
+      fullAddress: userOrder.fullAddress,
+      country: "Egypt",
+    },
+    items: userOrder.products,
+    subtotal: userOrder.price,
+    shippingCost: userOrder.shipping, // Include shipping cost in invoice
+    paid: userOrder.finalPrice,
+    invoice_nr: userOrder._id,
+  };
+
+  const pdfPath = path.join(
+    __dirname,
+    `./../../../invoiceTemp/${userOrder._id}.pdf`
+  );
+  createInvoice(invoice, pdfPath);
+
+  // upload cloudinary
+  const { secure_url, public_id } = await cloudinary.uploader.upload(
+    pdfPath,
+    {
+      folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
+    }
+  );
+  const isSent = await sendEmail({
+    to: user.email,
+    subject: "Order Invoice",
+    attachments: [
+      {
+        path: secure_url,
+        contentType: "application/pdf",
+      },
+    ],
+  });
+
+  if (isSent) {
+    const newInvoice = await Invoice.create({
+      user: user._id,
+      invoice: { id: public_id, url: secure_url },
+    });
+
+    return res.json({
+      success: true,
+      message: "Invoice sent successfully!",
+      invoice: newInvoice,
+    });
+  } else {
+    return next(new Error("Failed to send invoice."));
+  }
 });

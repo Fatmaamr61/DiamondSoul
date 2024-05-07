@@ -50,7 +50,12 @@ router.patch(
 );
 
 // add to favorite
-router.patch("/favorites/add", isValid(ProductIdSchema), addToFavorite);
+router.patch(
+  "/favorites/add",
+  isAuthenticated,
+  isValid(ProductIdSchema),
+  addToFavorite
+);
 
 // remove discount
 router.patch(
