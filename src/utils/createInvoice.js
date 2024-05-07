@@ -2,11 +2,13 @@ import fs from "fs";
 import PDFDocument from "pdfkit";
 import path from "path";
 import { fileURLToPath } from "url";
+import { PassThrough } from "stream";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export function createInvoice(invoice, path) {
+export function createInvoice(invoice) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
+  const stream = new PassThrough();
 
   //generateHeader(doc);
   generateLogo(doc, doc.page.width); // Add this line to generate the logo
@@ -14,8 +16,10 @@ export function createInvoice(invoice, path) {
   generateInvoiceTable(doc, invoice);
   generateFooter(doc);
 
-  doc.end();
-  doc.pipe(fs.createWriteStream(path));
+ doc.pipe(stream);
+ doc.end();
+
+ return stream;
 }
 
 // Function to generate the logo

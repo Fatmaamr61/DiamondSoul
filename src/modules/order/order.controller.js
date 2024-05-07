@@ -241,18 +241,12 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
 
 export const sendInvoice = AsyncHandler(async (req, res, next) => {
   // get user Order
-  const currentPath = __dirname;
-  console.log("Current Path:", currentPath);
-
-  // If you need the absolute path:
-  const absolutePath = path.resolve(__dirname);
-  console.log("Absolute Path:", absolutePath);
-
   const userOrder = await Order.findOne({ user: req.user._id });
   if (userOrder.length < 1) return next(new Error("no order for this user"));
 
   // get user data
   const user = await User.findById(req.user._id);
+
   // generate invoice
   const invoice = {
     shipping: {
@@ -268,110 +262,54 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
     invoice_nr: userOrder._id,
   };
 
-  const pdfPath = path.join(
+  /*  const pdfPath = path.join(
     __dirname,
     `../../../invoiceTemp/${userOrder._id}.pdf`
   );
   
-  console.log(pdfPath);
-  createInvoice(invoice, pdfPath);
+  console.log(pdfPath); */
 
-  // upload cloudinary
-  const { secure_url, public_id } = await cloudinary.uploader.upload(
-    pdfPath,
+  const invoiceStream = createInvoice(invoice);
+
+  // Upload the PDF stream directly to Cloudinary
+  let uploadStream = cloudinary.uploader.upload_stream(
     {
       folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
+      resource_type: "raw",
+    },
+    async (error, result) => {
+      if (error) {
+        return next(new Error("Failed to upload invoice to Cloudinary."));
+      }
+
+      // Send email with the URL of the PDF
+      const isSent = await sendEmail({
+        to: user.email,
+        subject: "Order Invoice",
+        attachments: [
+          {
+            path: result.secure_url,
+            contentType: "application/pdf",
+          },
+        ],
+      });
+
+      if (isSent) {
+        await Invoice.create({
+          user: user._id,
+          invoice: { id: result.public_id, url: result.secure_url },
+        });
+
+        return res.json({
+          success: true,
+          message: "Invoice sent successfully!",
+          invoice: { url: result.secure_url },
+        });
+      } else {
+        return next(new Error("Failed to send invoice email."));
+      }
     }
   );
 
-  const isSent = await sendEmail({
-    to: user.email,
-    subject: "Order Invoice",
-    attachments: [
-      {
-        path: secure_url,
-        contentType: "application/pdf",
-      },
-    ],
-  });
-
-  if (isSent) {
-    const newInvoice = await Invoice.create({
-      user: user._id,
-      invoice: { id: public_id, url: secure_url },
-    });
-
-    return res.json({
-      success: true,
-      message: "Invoice sent successfully!",
-      invoice: newInvoice,
-    });
-  } else {
-    return next(new Error("Failed to send invoice."));
-  }
+  invoiceStream.pipe(uploadStream);
 });
-
-
-/* export const sendInvoice = async (req, res, next) => {
-  try {
-    const userOrder = await Order.findOne({ user: req.user._id });
-    if (!userOrder) throw new Error("No order found for this user");
-
-    const user = await User.findById(req.user._id);
-
-    const invoice = {
-      shipping: {
-        name: user.userName,
-        city: userOrder.city,
-        fullAddress: userOrder.fullAddress,
-        country: "Egypt",
-      },
-      items: userOrder.products,
-      subtotal: userOrder.price,
-      shippingCost: userOrder.shipping,
-      paid: userOrder.finalPrice,
-      invoice_nr: userOrder._id,
-    };
-
-    const pdfBuffer = createInvoice(invoice);
-
-    const { secure_url, public_id } = await cloudinary.uploader.upload_stream(
-      (uploadStream) => {
-        pdfBuffer.pipe(uploadStream);
-      },
-      {
-        folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
-        resource_type: "auto",
-        public_id: `${userOrder._id}.pdf`,
-      }
-    );
-
-    const isSent = await sendEmail({
-      to: user.email,
-      subject: "Order Invoice",
-      attachments: [
-        {
-          path: secure_url,
-          contentType: "application/pdf",
-        },
-      ],
-    });
-
-    if (isSent) {
-      const newInvoice = await Invoice.create({
-        user: user._id,
-        invoice: { id: public_id, url: secure_url },
-      });
-
-      return res.json({
-        success: true,
-        message: "Invoice sent successfully!",
-        invoice: newInvoice,
-      });
-    } else {
-      throw new Error("Failed to send invoice.");
-    }
-  } catch (error) {
-    return next(error);
-  }
-}; */
