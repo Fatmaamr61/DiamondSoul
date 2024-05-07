@@ -241,6 +241,13 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
 
 export const sendInvoice = AsyncHandler(async (req, res, next) => {
   // get user Order
+  const currentPath = __dirname;
+  console.log("Current Path:", currentPath);
+
+  // If you need the absolute path:
+  const absolutePath = path.resolve(__dirname);
+  console.log("Absolute Path:", absolutePath);
+
   const userOrder = await Order.findOne({ user: req.user._id });
   if (userOrder.length < 1) return next(new Error("no order for this user"));
 
@@ -265,6 +272,7 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
     __dirname,
     `./../../../invoiceTemp/${userOrder._id}.pdf`
   );
+  
   console.log(pdfPath);
   createInvoice(invoice, pdfPath);
 
