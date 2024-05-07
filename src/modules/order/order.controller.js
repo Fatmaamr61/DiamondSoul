@@ -270,7 +270,7 @@ export const sendInvoice = AsyncHandler(async (req, res, next) => {
 
   const pdfPath = path.join(
     __dirname,
-    `./../../../invoiceTemp/${userOrder._id}.pdf`
+    `../../../invoiceTemp/${userOrder._id}.pdf`
   );
   
   console.log(pdfPath);
