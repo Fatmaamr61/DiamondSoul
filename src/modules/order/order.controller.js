@@ -239,7 +239,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
   });
 });
 
-/* export const sendInvoice = AsyncHandler(async (req, res, next) => {
+export const sendInvoice = AsyncHandler(async (req, res, next) => {
   // get user Order
   const userOrder = await Order.findOne({ user: req.user._id });
   if (userOrder.length < 1) return next(new Error("no order for this user"));
@@ -265,6 +265,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     __dirname,
     `./../../../invoiceTemp/${userOrder._id}.pdf`
   );
+  console.log(pdfPath);
   createInvoice(invoice, pdfPath);
 
   // upload cloudinary
@@ -301,70 +302,68 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     return next(new Error("Failed to send invoice."));
   }
 });
- */
 
-export const sendInvoice = AsyncHandler(async (req, res, next) => {
-  // get user Order
-  const userOrder = await Order.findOne({ user: req.user._id });
-  if (!userOrder) return next(new Error("No order found for this user"));
 
-  // get user data
-  const user = await User.findById(req.user._id);
+/* export const sendInvoice = async (req, res, next) => {
+  try {
+    const userOrder = await Order.findOne({ user: req.user._id });
+    if (!userOrder) throw new Error("No order found for this user");
 
-  // generate invoice
-  const invoice = {
-    shipping: {
-      name: user.userName,
-      city: userOrder.city,
-      fullAddress: userOrder.fullAddress,
-      country: "Egypt",
-    },
-    items: userOrder.products,
-    subtotal: userOrder.price,
-    shippingCost: userOrder.shipping, // Include shipping cost in invoice
-    paid: userOrder.finalPrice,
-    invoice_nr: userOrder._id,
-  };
+    const user = await User.findById(req.user._id);
 
-  // Create PDF invoice in memory
-  const pdfBuffer = createInvoice(invoice); // Assuming createInvoice returns a Buffer
-
-  // Upload PDF invoice to Cloudinary
-  const { secure_url, public_id } = await cloudinary.uploader.upload_stream(
-    async (uploadStream) => {
-      pdfBuffer.pipe(uploadStream);
-    },
-    {
-      folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
-      resource_type: "auto", // Detect the resource type automatically
-      public_id: `${userOrder._id}.pdf`, // Set public_id explicitly to avoid random filename
-    }
-  );
-
-  // Send email with Cloudinary URL as attachment
-  const isSent = await sendEmail({
-    to: user.email,
-    subject: "Order Invoice",
-    attachments: [
-      {
-        path: secure_url,
-        contentType: "application/pdf",
+    const invoice = {
+      shipping: {
+        name: user.userName,
+        city: userOrder.city,
+        fullAddress: userOrder.fullAddress,
+        country: "Egypt",
       },
-    ],
-  });
+      items: userOrder.products,
+      subtotal: userOrder.price,
+      shippingCost: userOrder.shipping,
+      paid: userOrder.finalPrice,
+      invoice_nr: userOrder._id,
+    };
 
-  if (isSent) {
-    const newInvoice = await Invoice.create({
-      user: user._id,
-      invoice: { id: public_id, url: secure_url },
+    const pdfBuffer = createInvoice(invoice);
+
+    const { secure_url, public_id } = await cloudinary.uploader.upload_stream(
+      (uploadStream) => {
+        pdfBuffer.pipe(uploadStream);
+      },
+      {
+        folder: `${process.env.FOLDER_CLOUD_NAME}/order/invoice`,
+        resource_type: "auto",
+        public_id: `${userOrder._id}.pdf`,
+      }
+    );
+
+    const isSent = await sendEmail({
+      to: user.email,
+      subject: "Order Invoice",
+      attachments: [
+        {
+          path: secure_url,
+          contentType: "application/pdf",
+        },
+      ],
     });
 
-    return res.json({
-      success: true,
-      message: "Invoice sent successfully!",
-      invoice: newInvoice,
-    });
-  } else {
-    return next(new Error("Failed to send invoice."));
+    if (isSent) {
+      const newInvoice = await Invoice.create({
+        user: user._id,
+        invoice: { id: public_id, url: secure_url },
+      });
+
+      return res.json({
+        success: true,
+        message: "Invoice sent successfully!",
+        invoice: newInvoice,
+      });
+    } else {
+      throw new Error("Failed to send invoice.");
+    }
+  } catch (error) {
+    return next(error);
   }
-});
+}; */
