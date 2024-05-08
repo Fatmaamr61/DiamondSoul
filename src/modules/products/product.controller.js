@@ -159,10 +159,6 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.productId);
   if (!product) return next(new Error("product not found!"));
 
-  // check owner
-  if (req.user._id.toString() !== product.createdBy.toString())
-    return next(new Error("Not authorized!", { cause: 401 }));
-
   // delete images
   const imageArr = product.images;
   const ids = imageArr.map((imageObj) => imageObj.id);
