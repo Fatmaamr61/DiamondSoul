@@ -190,21 +190,18 @@ export const getAllProducts = AsyncHandler(async (req, res, next) => {
     return res.json({ success: true, results: product });
   }
 
-  const { fields } = req.query;
-  const { sort } = req.query;
+/*   const { fields } = req.query;
+  const { sort } = req.query; */
 
-  let page = parseInt(req.query.page) || 1;
-  page = page < 1 ? 1 : page;
+ /*  let page = parseInt(req.query.page) || 1;
+  page = page < 1 ? 1 : page; */
 
-  const products = await Product.find({ ...req.query })
-    .paginate(page)
-    .customSelect(fields)
-    .sort(sort);
+  const products = await Product.find()
 
   if (products.length < 1)
     return next(new Error("no products found!", { cause: 404 }));
 
-  return res.json({ page, success: true, results: products });
+  return res.json({ success: true, results: products });
 });
 
 export const getSingleProduct = AsyncHandler(async (req, res, next) => {
