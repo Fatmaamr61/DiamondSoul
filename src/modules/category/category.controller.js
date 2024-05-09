@@ -4,7 +4,7 @@ import slugify from "slugify";
 import cloudinary from "../../utils/cloud.js";
 
 export const createCategory = AsyncHandler(async (req, res, next) => {
-  const {name} = req.body;
+  const { name } = req.body;
   console.log("nammee", name);
   // file
   if (!req.file) return next(new Error("category image is required!"));
@@ -43,11 +43,18 @@ export const updateCategory = AsyncHandler(async (req, res, next) => {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        public_id: category.image.id,
+        public_id: category.image.id, // Ensure this ID is valid and corresponds to a document in the database
       }
     );
+    const updateCategory = await Category.findByIdAndUpdate(
+      req.params.categoryId, // Pass the ID of the category to find and update
+      {
+        image: { url: secure_url, id: public_id }, // directly set the new image object
+      },
+      { new: true } // This returns the updated document
+    );
+     return res.json({ success: true, results: updateCategory });
   }
-
   // save category
   await category.save();
   return res.json({ success: true, results: category });
@@ -71,7 +78,7 @@ export const deleteCategory = AsyncHandler(async (req, res, next) => {
 
 export const getAllCategories = AsyncHandler(async (req, res, next) => {
   const categories = await Category.find();
-  if (categories.length<1)
+  if (categories.length < 1)
     return next(new Error("no categories found!", { cause: 404 }));
 
   return res.json({ success: true, results: categories });
