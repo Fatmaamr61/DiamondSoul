@@ -28,37 +28,37 @@ export const createCategory = AsyncHandler(async (req, res, next) => {
 });
 
 export const updateCategory = AsyncHandler(async (req, res, next) => {
-  // check category
+  // Retrieve the category by ID
   const category = await Category.findById(req.params.categoryId);
-  if (!category) return next(new Error("category not found!"));
+  if (!category) {
+    return next(new Error("Category not found!"));
+  }
 
-  // name
-  category.name = req.body.name ? req.body.name : category.name;
+  // Update name and slug if provided
+  if (req.body.name) {
+    category.name = req.body.name;
+    category.slug = slugify(req.body.name);
+  }
 
-  // slug
-  category.slug = req.body.name ? slugify(req.body.name) : category.slug;
-
-  // file
+  // Update the image if a file is provided
   if (req.file) {
     const { public_id, secure_url } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        public_id: category.image.id, // Ensure this ID is valid and corresponds to a document in the database
+        public_id: category.image.id, // Make sure this corresponds to an existing field
       }
     );
-    const updateCategory = await Category.findByIdAndUpdate(
-      req.params.categoryId, // Pass the ID of the category to find and update
-      {
-        image: { url: secure_url, id: public_id }, // directly set the new image object
-      },
-      { new: true } // This returns the updated document
-    );
-     return res.json({ success: true, results: updateCategory });
+    // Update the image information
+    category.image = { url: secure_url, id: public_id };
   }
-  // save category
-  await category.save();
-  return res.json({ success: true, results: category });
+
+  // Save all changes made to the category
+  const updatedCategory = await category.save();
+
+  // Return the updated category information
+  return res.json({ success: true, results: updatedCategory });
 });
+
 
 export const deleteCategory = AsyncHandler(async (req, res, next) => {
   // check category and delete
