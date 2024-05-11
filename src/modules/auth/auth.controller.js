@@ -3,7 +3,11 @@ import { User } from "../../../db/models/user.model.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { sendEmail } from "../../utils/sendEmail.js";
-import { passwordResetTemplate, signUpTemp } from "../../utils/generateHTML.js";
+import {
+  passwordResetTemplate,
+  signUpTemp,
+  accountActivatedTemplate,
+} from "../../utils/generateHTML.js";
 import jwt from "jsonwebtoken";
 import { Token } from "../../../db/models/token.model.js";
 import randomstring from "randomstring";
@@ -69,9 +73,7 @@ export const activateAccount = AsyncHandler(async (req, res, next) => {
   await Favorites.create({ user: user._id });
 
   // send response
-  return res.send(
-    "congratulations your account is now activated!, you can login now"
-  );
+  return res.send(accountActivatedTemplate());
 });
 
 export const login = AsyncHandler(async (req, res, next) => {
