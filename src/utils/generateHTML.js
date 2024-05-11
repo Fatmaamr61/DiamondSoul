@@ -224,3 +224,41 @@ export const passwordResetTemplate = (code) => `<!DOCTYPE html>
 </table>
 </body>
 </html>`;
+
+export const accountActivatedTemplate = () => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activated</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029369/DiamondSoul/background.jpg'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #172443; /* White text */
+        }
+        .container {
+            margin-top: 100px;
+        }
+        .logo {
+            margin-bottom: 20px; /* Add some space below the logo */
+        }
+        h1 {
+            color: #172443;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://res.cloudinary.com/dc4zgmrmf/image/upload/v1715029372/DiamondSoul/logo.png" alt="Your Logo" width="500"> <!-- Adjust width as needed -->
+        </div>
+        <h1 width="200">Congratulations!</h1>
+        <p>Your account has been activated. You can log in now.</p>
+    </div>
+</body>
+</html>`;
