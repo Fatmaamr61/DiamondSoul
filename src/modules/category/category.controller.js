@@ -59,7 +59,6 @@ export const updateCategory = AsyncHandler(async (req, res, next) => {
   return res.json({ success: true, results: updatedCategory });
 });
 
-
 export const deleteCategory = AsyncHandler(async (req, res, next) => {
   // check category and delete
   const category = await Category.findByIdAndDelete(req.params.categoryId);
@@ -89,7 +88,3 @@ export const getCategoryById = AsyncHandler(async (req, res, next) => {
   const category = await Category.findById(categoryId);
   return res.json({ success: true, results: category });
 });
-
-export const getAllProductsOfCategory = AsyncHandler(
-  async (req, res, next) => {}
-);

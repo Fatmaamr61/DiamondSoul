@@ -193,7 +193,11 @@ export const updateCart = AsyncHandler(async (req, res, next) => {
 // remove product from cart
 export const removeProductFromCart = AsyncHandler(async (req, res, next) => {
   // check product
-  const product = await Cart.findOne({ product: req.params.product });
+  const product = await Cart.findOne(
+    { user: req.user._id },
+    { product: req.params.product }
+  );
+  console.log(product);
   if (product.length < 1)
     return next(new Error("this product not found in the cart!"));
 
