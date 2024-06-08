@@ -117,9 +117,9 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
         orderPrice - (orderPrice * checkCoupon.discount) / 100
       ).toFixed(1)
     : orderPrice;
-  console.log("checkCoupon.discount: ", checkCoupon.discount);
-  console.log("finalPrice: ", finalPrice);
-  console.log("orderPrice", orderPrice);
+ //console.log("checkCoupon.discount: ", checkCoupon.discount);
+ // console.log("finalPrice: ", finalPrice);
+  //console.log("orderPrice", orderPrice);
 
   // Add shipping cost to order price
   const totalPriceWithShipping = finalPrice + shippingCost;

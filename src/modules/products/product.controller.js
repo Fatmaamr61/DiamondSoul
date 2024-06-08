@@ -164,7 +164,7 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
   const ids = imageArr.map((imageObj) => imageObj.id);
   ids.push(product.defaultImage.id);
 
-  const results = await cloudinary.api.delete_resources(ids);
+  await cloudinary.api.delete_resources(ids);
 
   // delete folder
   await cloudinary.api.delete_folder(
