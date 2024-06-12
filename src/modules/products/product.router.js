@@ -17,6 +17,7 @@ import {
   getAllProducts,
   getSingleProduct,
   removeDiscount,
+  userFavorites,
 } from "./product.controller.js";
 const router = Router({ mergeParams: true });
 
@@ -40,6 +41,7 @@ router.patch(
   isAuthorized("admin"),
   editProduct
 );
+
 // add discount
 router.patch(
   "/discount/:productId",
@@ -56,6 +58,9 @@ router.patch(
   isValid(ProductIdSchema),
   addToFavorite
 );
+
+// get favorites
+router.get("/favorites", isAuthenticated, userFavorites);
 
 // remove discount
 router.patch(

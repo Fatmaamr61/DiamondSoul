@@ -130,30 +130,61 @@ export const editProduct = AsyncHandler(async (req, res, next) => {
 export const addToFavorite = AsyncHandler(async (req, res, next) => {
   const { productId } = req.body;
 
-  // check if product exist
+  // Check if product exists
   const product = await Product.findById(productId);
-  if (!product) return next(new Error("product not found!", { cause: 404 }));
+  if (!product) return next(new Error("Product not found!", { cause: 404 }));
 
-  // check if product exist in user's favorites
-  const check = await Favorites.findOne({
+  // Check if product exists in user's favorites
+  const checkProduct = await Favorites.findOne({
     user: req.user._id,
     "products.id": productId,
   });
 
-  // add to favorites
-  const addToFavorite = await Favorites.findOneAndUpdate(
-    { user: req.user._id },
-    { $push: { products: { id: productId } } },
-    { new: true }
-  ).populate("products");
+  if (checkProduct) {
+    return res.json({
+      success: false,
+      message: "Product already added to favorite",
+    });
+  }
 
-  return res.json({
-    success: true,
-    message: "product added to favorites successfully..",
-    results: addToFavorite,
-  });
+  // Check if user has favorite schema
+  const userFavorites = await Favorites.findOne({ user: req.user._id });
+  if (userFavorites) {
+    // Add to favorites
+    const updatedFavorites = await Favorites.findOneAndUpdate(
+      { user: req.user._id },
+      { $push: { products: { id: productId } } },
+      { new: true }
+    ).populate("products");
+
+    return res.json({
+      success: true,
+      message: "Product added to favorites successfully.",
+      results: updatedFavorites,
+    });
+  } else {
+    // Create user's favorites
+    const newFavorites = await Favorites.create({
+      user: req.user._id,
+      products: [{ id: productId }],
+    });
+
+    return res.json({
+      success: true,
+      message: "Product added to favorites successfully.",
+      results: newFavorites,
+    });
+  }
 });
 
+export const userFavorites = AsyncHandler(async (req, res, next) => {
+  const user = req.user._id;
+
+  // get favprites
+  const favorite = await Favorites.findOne({ user }).populate("products.id");
+
+  return res.json({ success: true, results: favorite });
+});
 export const deleteProduct = AsyncHandler(async (req, res, next) => {
   // check product
   const product = await Product.findById(req.params.productId);
