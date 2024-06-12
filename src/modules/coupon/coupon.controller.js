@@ -50,12 +50,7 @@ export const deleteCoupon = AsyncHandler(async (req, res, next) => {
   });
   if (!coupon) return next(new Error("Invalid code!"));
 
-  // check owner
-  /* if (req.user._id.toString() !== coupon.createdBy.toString())
-    return next(new Error("not Authorized!")); */
-
-  // delete coupon
-  await Coupon.findOneAndDelete(req.params.code);
+  await Coupon.findOneAndDelete({ name: req.params.code });
 
   return res.json({ success: true, message: "coupon deleted successfully!" });
 });
