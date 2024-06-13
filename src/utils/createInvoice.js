@@ -10,24 +10,25 @@ export function createInvoice(invoice) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
   const stream = new PassThrough();
 
-  //generateHeader(doc);
-  generateLogo(doc, doc.page.width); // Add this line to generate the logo
+  const arabicFontPath = path.join(__dirname, "../../Amiri-Regular.ttf"); // Path to your Arabic-supporting font
+  doc.registerFont("Arabic", arabicFontPath);
+
+  generateLogo(doc, doc.page.width);
   generateCustomerInformation(doc, invoice);
   generateInvoiceTable(doc, invoice);
   generateFooter(doc);
 
- doc.pipe(stream);
- doc.end();
+  doc.pipe(stream);
+  doc.end();
 
- return stream;
+  return stream;
 }
 
-// Function to generate the logo
 function generateLogo(doc, pageWidth) {
-  const logoWidth = 200; // Width of the logo
-  const logoX = (pageWidth - logoWidth) / 2; // Calculate the x-coordinate to center the logo horizontally
-  const logoPath = path.join(__dirname, "../../logo.png"); // Provide the path to your logo file
-  doc.image(logoPath, logoX, 50, { width: logoWidth }); // Adjust the y-coordinate and size as needed
+  const logoWidth = 200;
+  const logoX = (pageWidth - logoWidth) / 2;
+  const logoPath = path.join(__dirname, "../../logo.png");
+  doc.image(logoPath, logoX, 50, { width: logoWidth });
 }
 
 function generateCustomerInformation(doc, invoice) {
@@ -49,8 +50,9 @@ function generateCustomerInformation(doc, invoice) {
     .text(formatCurrency(invoice.paid), 150, customerInformationTop + 30)
 
     .font("Helvetica-Bold")
+    .font("Arabic")
     .text(invoice.shipping.name, 300, customerInformationTop)
-    .font("Helvetica")
+    .font("Arabic")
     .text(invoice.shipping.city, 300, customerInformationTop + 15)
     .text(invoice.shipping.fullAddress, 300, customerInformationTop + 30)
     .text(invoice.shipping.country, 300, customerInformationTop + 45)

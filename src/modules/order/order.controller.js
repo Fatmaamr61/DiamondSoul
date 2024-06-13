@@ -21,7 +21,17 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
 
   // data
   const { payment, city, fullAddress, phone, coupon } = req.body;
+  console.log("full: ", fullAddress);
 
+  // Regular expression to detect Arabic characters
+  const arabicRegex = /[\u0600-\u06FF]/;
+
+  let processedAddress = fullAddress;
+  if (arabicRegex.test(fullAddress)) {
+    // Reverse the Arabic text
+    processedAddress = fullAddress.split(" ").reverse().join(" ");
+  }
+  console.log(processedAddress);
   // Calculate shipping cost based on city
   let shippingCost = 0;
   if (city.includes("cairo") || city.includes("giza")) {
@@ -117,8 +127,8 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
         orderPrice - (orderPrice * checkCoupon.discount) / 100
       ).toFixed(1)
     : orderPrice;
- //console.log("checkCoupon.discount: ", checkCoupon.discount);
- // console.log("finalPrice: ", finalPrice);
+  //console.log("checkCoupon.discount: ", checkCoupon.discount);
+  // console.log("finalPrice: ", finalPrice);
   //console.log("orderPrice", orderPrice);
 
   // Add shipping cost to order price
@@ -129,7 +139,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
     user: req.user._id,
     products: orderProducts,
     city,
-    fullAddress,
+    fullAddress: processedAddress,
     phone,
     coupon: {
       id: checkCoupon?._id,

@@ -185,6 +185,50 @@ export const userFavorites = AsyncHandler(async (req, res, next) => {
 
   return res.json({ success: true, results: favorite });
 });
+
+export const removeFromFavorite = AsyncHandler(async (req, res, next) => {
+  const { productId } = req.params;
+
+  // Check if product exists
+  const product = await Product.findById(productId);
+  if (!product) return next(new Error("Product not found!", { cause: 404 }));
+
+  // Check if user has favorite schema
+  const userFavorites = await Favorites.findOne({ user: req.user._id });
+  if (!userFavorites) {
+    return res.json({
+      success: false,
+      message: "User has no favorite products",
+    });
+  }
+
+  // Check if product exists in user's favorites
+  const checkProduct = await Favorites.findOne({
+    user: req.user._id,
+    "products.id": productId,
+  });
+
+  if (!checkProduct) {
+    return res.json({
+      success: false,
+      message: "Product not found in favorites",
+    });
+  }
+
+  // Remove from favorites
+  const updatedFavorites = await Favorites.findOneAndUpdate(
+    { user: req.user._id },
+    { $pull: { products: { id: productId } } },
+    { new: true }
+  ).populate("products.id");
+
+  return res.json({
+    success: true,
+    message: "Product removed from favorites successfully.",
+    results: updatedFavorites,
+  });
+});
+
 export const deleteProduct = AsyncHandler(async (req, res, next) => {
   // check product
   const product = await Product.findById(req.params.productId);

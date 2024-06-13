@@ -17,6 +17,7 @@ import {
   getAllProducts,
   getSingleProduct,
   removeDiscount,
+  removeFromFavorite,
   userFavorites,
 } from "./product.controller.js";
 const router = Router({ mergeParams: true });
@@ -61,6 +62,9 @@ router.patch(
 
 // get favorites
 router.get("/favorites", isAuthenticated, userFavorites);
+
+// remove from favorites
+router.put("/favorites/remove/:productId", isAuthenticated, removeFromFavorite);
 
 // remove discount
 router.patch(
