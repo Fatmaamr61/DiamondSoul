@@ -6,12 +6,6 @@ const productSchema = new Schema(
     price: { type: Number, required: true, min: 1 },
     description: { type: String },
     slug: { type: String, required: true },
-    images: [
-      {
-        id: { type: String, required: true },
-        url: { type: String, required: true },
-      },
-    ],
     defaultImage: {
       id: { type: String, required: true },
       url: { type: String, required: true },

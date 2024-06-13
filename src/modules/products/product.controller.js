@@ -22,13 +22,13 @@ export const addProduct = AsyncHandler(async (req, res, next) => {
   let images = [];
 
   // upload images
-  for (const file of req.files.subImages) {
+/*   for (const file of req.files.subImages) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       file.path,
       { folder: `${process.env.FOLDER_CLOUD_NAME}/products/${name}/subImages` }
     );
     images.push({ id: public_id, url: secure_url });
-  }
+  } */
 
   // upload default image
   const { secure_url, public_id } = await cloudinary.uploader.upload(
@@ -239,6 +239,7 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
   const ids = imageArr.map((imageObj) => imageObj.id);
   ids.push(product.defaultImage.id);
 
+  console.log(ids);
   await cloudinary.api.delete_resources(ids);
 
   // delete folder
