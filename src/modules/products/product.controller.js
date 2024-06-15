@@ -247,7 +247,6 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
     {}, // The filter for the documents to update. In this case, it seems like you want to update all documents.
     { $pull: { products: { id: req.params.productId } } } // The update operation.
   );
-  console.log(remFav);
 
   // delete product
   await Product.findByIdAndDelete(req.params.productId);
