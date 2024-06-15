@@ -182,6 +182,7 @@ export const userFavorites = AsyncHandler(async (req, res, next) => {
 
   // get favprites
   const favorite = await Favorites.findOne({ user }).populate("products.id");
+  if (!favorite) return next(new Error("no user favotites!"));
 
   return res.json({ success: true, results: favorite });
 });
@@ -234,18 +235,19 @@ export const deleteProduct = AsyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.productId);
   if (!product) return next(new Error("product not found!"));
 
-  // delete images
-  /*   const imageArr = product.images;
-  const ids = imageArr.map((imageObj) => imageObj.id);
-  ids.push(product.defaultImage.id);
-
-  console.log(ids); */
   await cloudinary.api.delete_resources(product.defaultImage.id);
 
   // delete folder
   await cloudinary.api.delete_folder(
     `${process.env.FOLDER_CLOUD_NAME}/products/${product.name}`
   );
+
+  // remove product from favorites
+  const remFav = await Favorites.updateMany(
+    {}, // The filter for the documents to update. In this case, it seems like you want to update all documents.
+    { $pull: { products: { id: req.params.productId } } } // The update operation.
+  );
+  console.log(remFav);
 
   // delete product
   await Product.findByIdAndDelete(req.params.productId);
