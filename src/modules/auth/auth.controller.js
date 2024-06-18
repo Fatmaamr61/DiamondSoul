@@ -38,7 +38,7 @@ export const register = AsyncHandler(async (req, res, next) => {
   });
 
   // create confirmation link
-  const link = `https://api.diamondsoulstore.com/auth/confirmEmail/${activationCode}`;
+  const link = `https://www.api.diamondsoulstore.com/auth/confirmEmail/${activationCode}`;
 
   // send email
   const isSent = await sendEmail({
