@@ -48,6 +48,8 @@ function generateCustomerInformation(doc, invoice) {
     .text(formatDate(new Date()), 150, customerInformationTop + 15)
     .text("Order Price:", 50, customerInformationTop + 30)
     .text(formatCurrency(invoice.paid), 150, customerInformationTop + 30)
+    .text("Phone Number:", 50, customerInformationTop + 45) // Add this line
+    .text(invoice.shipping.phone, 150, customerInformationTop + 45) // Add this line
 
     .font("Helvetica-Bold")
     .font("Arabic")
@@ -58,7 +60,7 @@ function generateCustomerInformation(doc, invoice) {
     .text(invoice.shipping.country, 300, customerInformationTop + 45)
     .moveDown();
 
-  generateHr(doc, 260);
+  generateHr(doc, 275); // Adjusted to accommodate additional line
 }
 
 function generateInvoiceTable(doc, invoice) {

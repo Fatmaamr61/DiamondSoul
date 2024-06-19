@@ -159,6 +159,7 @@ export const createOrder = AsyncHandler(async (req, res, next) => {
       city: order.city,
       fullAddress: order.fullAddress,
       country: "Egypt",
+      phone: order.phone,
     },
     items: order.products,
     subtotal: order.price,
